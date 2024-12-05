@@ -17,8 +17,8 @@ age groups and regions from 2015 and 2020 in order to understand patterns in mor
 
 1. How have mortality trends changed from 2015 and 2020 across different age groups?
 
-2. Whigh regions have seen the largest change in mortality rates over time and how do these trends compare across age groups?
+2. What is the relative contribution of different risk factors to mortality in 2020?
 
-3. Are there specific age groups or regions that consistently experience higher mortality rates compared to the global avergae? 
+3. Do regions or age groups with higher mortality reductions show lower risk factors contribution? 
 
 ## Detailed plans and timeline 
