@@ -7,7 +7,7 @@ Final Project for HMS520 Data Analysis for (GBD 2021) Tuberculosis Estimates 199
 
 ## Format we chose 
 
-- 3. Analyzing a dataset that uses data wrangling and modeling tools in R
+3. Analyzing a dataset that uses data wrangling and modeling tools in R
 
 ## Overall goal of project 
 
@@ -15,17 +15,17 @@ In our project we plan to use the Global Burden of Disease 2021 (GBD 2021) Tuber
 Our dataset contains mortality counts across different age groups, years and location. We would like to investigate trends in global mortality rates from tuberculosis by different 
 age groups and regions from 2015 and 2020 in order to understand patterns in mortality rates. Our main questions are:
 
-1. How have mortality rates changed from 2015 to 2020 across different age groups?
+**1. How have mortality rates changed from 2015 to 2020 across different age groups?**
 
-2. What is the relative contribution of different risk factors to mortality in 2015 and 2020?
+**2. What is the relative contribution of different risk factors to mortality in 2015 and 2020?**
 
-3. Do regions or age groups with higher mortality reductions show lower risk factors contribution? 
+**3. Do regions or age groups with higher mortality reductions show lower risk factors contribution?**
 
 ## Detailed plans and timeline 
 
 ### Detailed Plan 
 
-1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?
+**1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?**
 
 - Main goal: Assess change in mortality trends over time to identify vulnerable age groups or regions with the largest reductions or increases in mortality 
 
@@ -39,7 +39,7 @@ age groups and regions from 2015 and 2020 in order to understand patterns in mor
     - Bar plot of mortality changes by age group and location
     - Insights on which age group or region have seen the most improvement / setback
 
-2. What is the realative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality in 2015 and 2020?
+**2. What is the realative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality in 2015 and 2020?**
 
 - Main goal: Understand impact of individual risk factors on overall mortality and identify the most influential contributors
 
@@ -53,7 +53,7 @@ age groups and regions from 2015 and 2020 in order to understand patterns in mor
     - Chart showing relative contributions of smoking, alcohol, and diabetes across age group or locations
     - Key findings on which risk factors to target for interventions 
 
-3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?
+**. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?**
 
 - Main goal: Explore relationship between changes in mortality and prevalence or impact of risk factors 
 
