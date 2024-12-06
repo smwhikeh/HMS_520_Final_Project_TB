@@ -116,7 +116,9 @@ ggplot(mortality_region, aes(x = reorder(location_name, mean_mortality_change),
   ## if line is sloped upward it indicates that mortality has increased in those locations for that age group over time 
 ```
 
-2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality in 2015 and 2020?
+2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality?
+
+
 
 3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?
 
