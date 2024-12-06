@@ -1,6 +1,6 @@
 ---
-title: "hms_520_tb_final"
-author: "sophie whikehart"
+title: "hms_520_TB_Final"
+author: "Sophie Whikehart and Ye Htet Naing"
 date: "2024-12-06"
 output: html_document
 ---
@@ -9,22 +9,41 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Final Project - Global Mortality and Risk Factor Contributions for Tuberculosis Estimates from 2015 and 2020
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Abstract
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+- Ye
 
-```{r cars}
-summary(cars)
-```
+- Give an overview of the project, what our goals are and what we hope to find 
 
-## Including Plots
+## Introduction
 
-You can also embed plots, for example:
+- Ye
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+Provide a brief background: what do we already know about this topic? Why is it interesting? What do you want to add to what already exists?
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+---
+
+## Data Explanation
+
+## Data Description 
+
+## Methods 
+
+### Data processing 
+
+### Mortality rate change analysis 
+
+### Risk factor contribution analysis 
+
+### Correlation analysis between mortality reduction and risk factors 
+
+---
+
+## Results 
+
+- Ye & Sophie 
+
+
+
