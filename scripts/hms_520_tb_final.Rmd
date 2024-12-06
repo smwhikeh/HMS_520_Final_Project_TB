@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 ```
 
 # Final Project - Global Mortality and Risk Factor Contributions for Tuberculosis Estimates from 2015 and 2020
@@ -51,24 +52,69 @@ mortality_data <- read_excel("/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB
 
 ## check for missing values 
 colSums(is.na(mortality_data))
-
-## rename columns 
-
-cleaned_data <- mortality_data %>%
-  rename(
-    location = location_name,
-    location_type = location_type,
-    age_group = age_group_name,
-    mort_2015 = mort_2015_count_mean,
-    mort_2020 = mort_2020_count_mean,
-    smoking_risk = rmv_mean_smoking,
-    alcohol_risk = rmv_mean_alcohol,
-    diabetes_risk = rmv_mean_diabetes,
-    total_risk = rmv_mean_all_risk
-  )
 ```
 
 1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?
+
+```{r}
+
+# filter for data just on region and super regions 
+
+region_data <- mortality_data %>%
+  filter(location_type %in% c("region"))
+
+# data wrangling -- calculate percent change in mortality by regions 
+
+mortality_region <- region_data %>%
+  mutate(mortality_change = ((mort_2020_count_mean - mort_2015_count_mean) / mort_2015_count_mean) * 100) %>%
+  group_by(age_group_name, location_name) %>%
+  summarize(mean_mortality_change = mean(mortality_change, na.rm = TRUE))
+
+# visualization on region based on decreasing in mortality 
+
+## highlighting the largest reduction
+
+ggplot(mortality_region, aes(x = reorder(location_name, -mean_mortality_change), y = mean_mortality_change)) + 
+  geom_point(color = "red", size = 3) + 
+  geom_segment(aes(xend = location_name, yend = 0), color = "black") +  # Lines from points to zero
+  coord_flip() +  # Flip axes for horizontal bars
+  labs(title = "Mean Mortality Change from 2015 - 2020 (All Ages)",
+       x = "Region",
+       y = "Mean Mortality Change") + 
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+## Regions with the largest negative values (located at the top of the plot) have seen the biggest reduction in mortality during the 2015-2020 period. These are likely areas where health interventions, improvements in healthcare, or other factors might have led to a reduction in deaths.
+
+## Regions with positive values will show increased mortality, suggesting areas where the mortality rate has risen, potentially due to challenges like poor healthcare access, economic difficulties, or other systemic issues.
+
+## plot provides a comparative view of how different regions have performed in terms of mortality over the 2015-2020 period. This could help identify patterns, trends, or regions that need additional focus in terms of health interventions or resources.
+
+## If you are analyzing regional disparities, the plot helps identify which regions have been improving (decreasing mortality) versus those that might require attention due to rising mortality rates.
+
+# Create a line plot to visualize trends by age group
+ggplot(mortality_region, aes(x = reorder(location_name, mean_mortality_change), 
+                             y = mean_mortality_change, 
+                             color = age_group_name, 
+                             group = age_group_name)) +
+  geom_line() +  # Adds lines for each age group
+  geom_point() +  # Adds points at each location for clarity
+  coord_flip() +  # Flip coordinates for horizontal lines
+  labs(title = "Trends in Mean Mortality Change by Location",
+       x = "Location",
+       y = "Mean Mortality Change") +
+  theme_minimal() +  # Clean minimal theme
+  theme(axis.text.y = element_text(size = 10)) +  # Adjust text size for readability
+  scale_color_brewer(palette = "Set2")  # Use a color palette for age groups
+
+## represents average change in mortality rates for each location
+  ## positive value indicates increase in mortality while negative value indicates decrease
+
+## lines and points corresponding to each age group show how mean mortality change trend varies for that specific group across different locations
+
+## slope of each line indicates direction and strength of change 
+  ## if line is sloped upward it indicates that mortality has increased in those locations for that age group over time 
+```
 
 2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality in 2015 and 2020?
 
