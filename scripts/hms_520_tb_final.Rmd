@@ -2,7 +2,7 @@
 title: "hms_520_TB_Final"
 author: "Sophie Whikehart and Ye Htet Naing"
 date: "2024-12-06"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
