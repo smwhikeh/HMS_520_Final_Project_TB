@@ -27,7 +27,13 @@ Provide a brief background: what do we already know about this topic? Why is it 
 
 ## Data Explanation
 
-## Data Description 
+## Data Description
+
+For this project we are using the data set from IHME titled: Global Burden of Disease 2021 [GBD 2021] Tuberculosis Estimates 1990-2021 
+
+This data set includes estimates of burden associated with all-form tuberculosis for GBD countries between 1990 and 2021. Tuberculosis mortality was informed by vital registration, verbal autopsy, sample-based vital registration and mortality surveillance data. TB morbidity data includes annual case notifications, data from prevalence surveys, and estimated cause specific mortality [CSMR] of TB among HIV-positive and HIV-negative individuals (IHME GBD 2021).
+
+For our project we are utilizing the `IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D19.XLSX` which contains risk deleted deaths due to all-form tuberculosis for alcohol use, smoking, and diabetes and all three risk factors combined by adult age groups by country 
 
 ## Methods 
 
