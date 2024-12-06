@@ -39,7 +39,7 @@ age groups and regions from 2015 and 2020 in order to understand patterns in mor
     - Bar plot of mortality changes by age group and location
     - Insights on which age group or region have seen the most improvement / setback
 
-**2. What is the realative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality in 2015 and 2020?**
+**2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality in 2015 and 2020?**
 
 - Main goal: Understand impact of individual risk factors on overall mortality and identify the most influential contributors
 
@@ -53,7 +53,7 @@ age groups and regions from 2015 and 2020 in order to understand patterns in mor
     - Chart showing relative contributions of smoking, alcohol, and diabetes across age group or locations
     - Key findings on which risk factors to target for interventions 
 
-**. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?**
+**3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?**
 
 - Main goal: Explore relationship between changes in mortality and prevalence or impact of risk factors 
 

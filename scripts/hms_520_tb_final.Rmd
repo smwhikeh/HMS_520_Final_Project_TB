@@ -7,6 +7,11 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# install libraries
+library(readxl)
+library(dplyr)
+library(tidyr)
 ```
 
 # Final Project - Global Mortality and Risk Factor Contributions for Tuberculosis Estimates from 2015 and 2020
@@ -33,17 +38,43 @@ For this project we are using the data set from IHME titled: Global Burden of Di
 
 This data set includes estimates of burden associated with all-form tuberculosis for GBD countries between 1990 and 2021. Tuberculosis mortality was informed by vital registration, verbal autopsy, sample-based vital registration and mortality surveillance data. TB morbidity data includes annual case notifications, data from prevalence surveys, and estimated cause specific mortality [CSMR] of TB among HIV-positive and HIV-negative individuals (IHME GBD 2021).
 
-For our project we are utilizing the `IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D19.XLSX` which contains risk deleted deaths due to all-form tuberculosis for alcohol use, smoking, and diabetes and all three risk factors combined by adult age groups by country 
+For our project we are utilizing the `IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D19.XLSX` which contains risk deleted deaths due to all-form tuberculosis for alcohol use, smoking, and diabetes and all three risk factors combined by adult age groups by country for 2015, 2020 and 2021. 
 
 ## Methods 
 
-### Data processing 
+### Data pre-processing 
 
-### Mortality rate change analysis 
+```{r}
 
-### Risk factor contribution analysis 
+# read in the data 
+mortality_data <- read_excel("/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/data/IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D19.XLSX")
 
-### Correlation analysis between mortality reduction and risk factors 
+## check for missing values 
+colSums(is.na(mortality_data))
+
+## rename columns 
+
+cleaned_data <- mortality_data %>%
+  rename(
+    location = location_name,
+    location_type = location_type,
+    age_group = age_group_name,
+    mort_2015 = mort_2015_count_mean,
+    mort_2020 = mort_2020_count_mean,
+    smoking_risk = rmv_mean_smoking,
+    alcohol_risk = rmv_mean_alcohol,
+    diabetes_risk = rmv_mean_diabetes,
+    total_risk = rmv_mean_all_risk
+  )
+```
+
+1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?
+
+2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality in 2015 and 2020?
+
+3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?
+
+ 
 
 ---
 
