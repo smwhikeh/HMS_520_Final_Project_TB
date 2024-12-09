@@ -1,12 +1,12 @@
 ---
-title: "hms_520_TB_Final"
+title: "HMS_520_TB_Final"
 author: "Sophie Whikehart and Ye Htet Naing"
 date: "2024-12-06"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 
 # install libraries
 library(readxl)
@@ -19,19 +19,26 @@ library(ggplot2)
 
 ## Abstract
 
-- Ye
+The World Health Organization (WHO) End TB Strategy set ambitious targets to reduce tuberculosis (TB) mortality by 35% and incidence by 20% between 2015 and 2020. While global progress has been reported, age-specific and regional analyses remain limited. This study utilizes the Global Burden of Disease 2021 (GBD 2021) Tuberculosis Estimates to assess trends in TB mortality and the contributions of smoking, alcohol use, and diabetes as risk factors.
 
-- Give an overview of the project, what our goals are and what we hope to find 
+Our analysis examines TB mortality trends from 2015 to 2020 across age groups, regions, and risk factors using mortality counts from the GBD data set. 
 
 ## Introduction
 
-- Ye
+Tuberculosis (TB) continues to be one of the leading causes of infectious disease mortality globally, posing significant challenges to public health systems. In response, the World Health Organization (WHO) launched the End TB Strategy, aiming to reduce TB mortality by 35% and TB incidence by 20% between 2015 and 2020. While global progress has been documented, there is a limited understanding of how these trends vary by age and region, as well as the role of modifiable risk factors such as smoking, alcohol use, and diabetes. Age-specific evaluations are critical to inform tailored interventions and ensure equitable progress across populations.
 
-Provide a brief background: what do we already know about this topic? Why is it interesting? What do you want to add to what already exists?
+In this study, we leverage the Global Burden of Disease 2021 (GBD 2021) Tuberculosis Estimates to examine TB mortality trends from 2015 to 2020 across different age groups and regions. The data set includes mortality counts stratified by location, year, and age, as well as estimates of deaths attributable to smoking, alcohol use, and diabetes.
 
----
+Our primary research questions include:
 
-## Data Explanation
+1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?
+
+2. What is the relative contribution of different risk factors (e.g., smoking, alcohol use, and diabetes) to TB mortality in 2015 and 2020?
+
+3. Do regions or age groups with higher reductions in TB mortality also show lower contributions of risk factors?
+
+By addressing these questions, this project seeks to fill critical gaps in understanding TB mortality trends and their driving factors. Our findings will provide evidence to guide targeted interventions and strengthen global efforts toward achieving the WHO End TB Strategy goals.
+
 
 ## Data Description
 
@@ -43,18 +50,54 @@ For our project we are utilizing the `IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D1
 
 ## Methods 
 
-### Data pre-processing 
+The variables of interest in our project were the mortality counts, risk factors and geographic and age group stratification. We pre-processed the data by:
 
-```{r}
+1. Importing data set and filtering relevant columns
+2. Checking and address missing data
+3. Creating calculated variables 
+  - Percent change in mortality between 2015 and 2020 
+  - Proportional contribution of each risk factor to attributable TB deaths 
+  
+We also conducted the following analyses 
+
+1. Trend Analysis 
+  - Calculate percent change in mortality by region and age group from 2015 - 2020 
+  - Visualize the trend using bar plot and line plot to highlight the change in mortality 
+  
+2. Attributable Risk Factor Analysis 
+  - Summarize the contribution of smoking, alcohol use and diabetes to TB mortality across age groups and regions 
+  - Use grouped bar plots to visualize attributable mortality by risk factor 
+  
+3. Association Between Mortality Reduction and Risk Factor Contribution 
+  - Assess relationship between reduction in mortality rate and average risk factor contribution using linear regression model
+  - Visualize the association with scatter plot and regression line 
+  
+```{r, include = FALSE}
 
 # read in the data 
 mortality_data <- read_excel("/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/data/IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D19.XLSX")
+
+## filter for relevant columns 
+mortality_data <- mortality_data %>%
+  select(
+    location_name,
+    location_type,
+    age_group_name,
+    mort_2015_count_mean,
+    mort_2020_count_mean,
+    rmv_mean_smoking,
+    rmv_mean_alcohol,
+    rmv_mean_diabetes,
+    rmv_mean_all_risk
+  )
 
 ## check for missing values 
 colSums(is.na(mortality_data))
 ```
 
-1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?
+---
+
+# Question 1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?
 
 ```{r}
 
@@ -78,7 +121,7 @@ ggplot(mortality_region, aes(x = reorder(location_name, -mean_mortality_change),
   geom_point(color = "red", size = 3) + 
   geom_segment(aes(xend = location_name, yend = 0), color = "black") +  # Lines from points to zero
   coord_flip() +  # Flip axes for horizontal bars
-  labs(title = "Mean Mortality Change from 2015 - 2020 (All Ages)",
+  labs(title = "Fig 1. Mean Mortality Change from 2015 - 2020 (All Ages)",
        x = "Region",
        y = "Mean Mortality Change") + 
   theme_minimal() + 
@@ -100,7 +143,7 @@ ggplot(mortality_region, aes(x = reorder(location_name, mean_mortality_change),
   geom_line() +  # Adds lines for each age group
   geom_point() +  # Adds points at each location for clarity
   coord_flip() +  # Flip coordinates for horizontal lines
-  labs(title = "Trends in Mean Mortality Change by Location",
+  labs(title = "Fig 2. Trends in Mean Mortality Change by Location",
        x = "Location",
        y = "Mean Mortality Change") +
   theme_minimal() +  # Clean minimal theme
@@ -116,13 +159,129 @@ ggplot(mortality_region, aes(x = reorder(location_name, mean_mortality_change),
   ## if line is sloped upward it indicates that mortality has increased in those locations for that age group over time 
 ```
 
-2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality?
+---
+
+# Question 2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality?
+
+```{r}
+
+# Calculate attributable mortality 
+
+risk_factors <- mortality_data %>%
+  mutate(
+    prop_smoking = rmv_mean_smoking / rmv_mean_all_risk,
+    prop_alcohol = rmv_mean_alcohol / rmv_mean_all_risk,
+    prop_diabetes = rmv_mean_diabetes / rmv_mean_all_risk
+  )
+
+## this computes proportion of total attributable mortality due to each risk factor
+
+# summarize by age 
+
+summary_by_age <- risk_factors %>%
+  group_by(age_group_name) %>%
+  summarise(
+    smoking_mortality = sum(rmv_mean_smoking, na.rm = TRUE),
+    alcohol_mortality = sum(rmv_mean_alcohol, na.rm = TRUE),
+    diabetes_mortality = sum(rmv_mean_diabetes, na.rm = TRUE),
+    total_attributable = sum(rmv_mean_all_risk, na.rm = TRUE)
+  )
+
+# summarize_by_region <- risk_factors %>%
 
 
+# visualize 
 
-3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?
+summary_long <- summary_by_age %>%
+  pivot_longer(
+    cols = c(smoking_mortality, alcohol_mortality, diabetes_mortality),
+    names_to = "risk_factor",
+    values_to = "mortality"
+  )
 
- 
+ggplot(summary_long, aes(x = age_group_name, y = mortality, fill = risk_factor)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Fig 3. Attributable Mortality by Age Group",
+    x = "Age Group",
+    y = "Attributable Deaths",
+    fill = "Risk Factor"
+  ) +
+  theme_minimal()
+```
+```{r}
+summarize_by_region <- risk_factors %>%
+  filter(location_type %in% c("superregion", "region")) %>%  # Filter for superregion and region
+  group_by(location_name, location_type) %>%  # Group by region and type
+  summarise(
+    smoking_mortality = sum(rmv_mean_smoking, na.rm = TRUE),
+    alcohol_mortality = sum(rmv_mean_alcohol, na.rm = TRUE),
+    diabetes_mortality = sum(rmv_mean_diabetes, na.rm = TRUE),
+    total_attributable = sum(rmv_mean_all_risk, na.rm = TRUE)
+  )
+
+# Reshape to long format
+region_long <- summarize_by_region %>%
+  pivot_longer(
+    cols = c(smoking_mortality, alcohol_mortality, diabetes_mortality),
+    names_to = "risk_factor",
+    values_to = "mortality"
+  )
+
+ggplot(region_long, aes(x = location_name, y = mortality, fill = risk_factor)) +
+  geom_bar(stat = "identity", position = "dodge") +  # Grouped bars
+  labs(
+    title = "Fig 4. Attributable Mortality by Region",
+    x = "Region",
+    y = "Mortality",
+    fill = "Risk Factor"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels for readability
+    legend.position = "bottom"
+  )
+```
+
+---
+
+# Question 3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?
+
+```{r}
+
+# calculate mortality reduction 
+
+mortality_data <- mortality_data %>%
+  mutate (
+    reduction_rate = ((mort_2015_count_mean - mort_2020_count_mean) / mort_2015_count_mean) * 100
+  )
+
+# summary risk factor contribution 
+
+mortality_data <- mortality_data %>%
+  rowwise() %>%
+  mutate(
+    avg_risk_factor_contribution = mean(c(rmv_mean_smoking, rmv_mean_alcohol, rmv_mean_diabetes, rmv_mean_all_risk), na.rm = TRUE)
+  )
+
+# linear regression 
+
+model <- lm(avg_risk_factor_contribution ~ reduction_rate, data = mortality_data)
+
+# view model 
+summary(model)
+
+# visualize 
+ggplot(mortality_data, aes(x = reduction_rate, y = avg_risk_factor_contribution)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(
+    title = "Fig 5. Linear Regression: Mortality Reduction vs. Risk Factor Contributions",
+    x = "Mortality Reduction Rate (%)",
+    y = "Average Risk Factor Contribution"
+  ) +
+  theme_minimal()
+```
 
 ---
 
