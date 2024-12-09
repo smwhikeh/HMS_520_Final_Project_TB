@@ -21,13 +21,25 @@ library(ggplot2)
 
 - Ye
 
-- Give an overview of the project, what our goals are and what we hope to find 
+The World Health Organization (WHO) End TB Strategy set ambitious targets to reduce tuberculosis (TB) mortality by 35% and incidence by 20% between 2015 and 2020. While global progress has been reported, age-specific and regional analyses remain limited. This study utilizes the Global Burden of Disease 2021 (GBD 2021) Tuberculosis Estimates to assess trends in TB mortality and the contributions of smoking, alcohol use, and diabetes as risk factors.
+
+Our analysis examines TB mortality trends from 2015 to 2020 across age groups, regions, and risk factors using mortality counts from the GBD dataset. 
+
+
 
 ## Introduction
 
-- Ye
+- Tuberculosis (TB) continues to be one of the leading causes of infectious disease mortality globally, posing significant challenges to public health systems. In response, the World Health Organization (WHO) launched the End TB Strategy, aiming to reduce TB mortality by 35% and TB incidence by 20% between 2015 and 2020. While global progress has been documented, there is a limited understanding of how these trends vary by age and region, as well as the role of modifiable risk factors such as smoking, alcohol use, and diabetes. Age-specific evaluations are critical to inform tailored interventions and ensure equitable progress across populations.
 
-Provide a brief background: what do we already know about this topic? Why is it interesting? What do you want to add to what already exists?
+In this study, we leverage the Global Burden of Disease 2021 (GBD 2021) Tuberculosis Estimates to examine TB mortality trends from 2015 to 2020 across different age groups and regions. The dataset includes mortality counts stratified by location, year, and age, as well as estimates of deaths attributable to smoking, alcohol use, and diabetes.
+
+Our primary research questions include:
+
+How have mortality rates changed from 2015 to 2020 across different age groups and regions?
+What is the relative contribution of different risk factors (e.g., smoking, alcohol use, and diabetes) to TB mortality in 2015 and 2020?
+Do regions or age groups with higher reductions in TB mortality also show lower contributions of risk factors?
+
+By addressing these questions, this project seeks to fill critical gaps in understanding TB mortality trends and their driving factors. Our findings will provide evidence to guide targeted interventions and strengthen global efforts toward achieving the WHO End TB Strategy goals.
 
 ---
 
