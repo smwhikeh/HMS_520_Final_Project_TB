@@ -258,7 +258,7 @@ fig_4
 
 ```{r}
 
-# calculate mortality reduction 
+# calculate mortality reduction rate
 
 mortality_data <- mortality_data %>%
   mutate (
@@ -296,7 +296,7 @@ fig_5
 
 ## Results 
 
-In our first question we calculated and visualized percent changes in TB mortality across regions and age groups. Our results show that there are differences in reductions and increases in TB mortality by region and age group. In **Figure 1.** we calculated the mean mortality change from 2015 - 2020 by all ages and grouped by region and super region. The results of this figure show the visualization of region based on decreasing in mortality. Therefore Eastern Europe, Central Europe and Central Asia have seen the biggest reduction in mortality from 2015 to 2020. There are likely the areas where health interventions, improvements in healthcare or other factors have led to a reduction in deaths due to TB. On the other hand regions such as High-income North America, Oceania and Central Latin America have shown the highest increase in mortality. This suggests that these areas are where mortality rates have risk which could be due to potential challenges such as poor healthcare access, economic difficulty and other systemic issues. This graph helps identify what regions need additional focus in terms of health interventions or resources to help reduce TB mortality. 
+In our first question we calculated and visualized percent changes in TB mortality across regions and age groups. Our results show that there are differences in reductions and increases in TB mortality by region and age group. In **Figure 1.** we calculated the mean mortality change from 2015 - 2020 by all ages and grouped by region and super region. The results of this figure show the visualization of region based on decreasing in mortality. Therefore Eastern Europe, Central Europe and Central Asia have seen the biggest reduction in mortality from 2015 to 2020. There are likely the areas where health interventions, improvements in healthcare or other factors have led to a reduction in deaths due to TB. On the other hand regions such as High-income North America, Oceania and Central Latin America have shown the highest increase in mortality. This suggests that these areas are where mortality rates have increased could be due to potential challenges such as poor healthcare access, economic difficulty and other systemic issues. This graph helps identify what regions need additional focus in terms of health interventions or resources to help reduce TB mortality. 
 
 **Figure 2.** shows the trends in mean mortality change by region and super region but this time it is grouped by age groups. This figure highlights that consistently we see an increase of mortality change by the age groups in the 70+ and 50-69 year age group. Because these age groups consistently exhibit higher mortality change across multiple locations it indicates that there is need for age-specific interventions for older populations in all regions. 
 
