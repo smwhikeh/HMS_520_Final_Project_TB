@@ -25,6 +25,12 @@ Our analysis examines TB mortality trends from 2015 to 2020 across age groups, r
 
 ## Introduction
 
+Tuberculosis (TB) is an ancient infectious disease with evidence of bone in TB in Egyptian mummies (2400 BC). TB is also known as consumption, the white plague, phthisis and the graveyard cough. TB is an airborne infection that is spread from someone with active TB. 1/10 people on average who are infected will go on to develop active TB. On the other hand, if you have latent TB you have no symptoms and cannot spread TB infection to others.
+
+Testing for latent TB includes tuberculin skin tests and interferon gamma release assays [blood tests]. The sites of active TB disease include the lungs [pulmonary TB] and can also involve other organs such as the bones and intestines. TB diagnosis is done with specimen collection of sputum, CSF or pleural fluid. The gold standard for diagnosis is through a culture but the disadvantage it that there is long turnaround time [up to 6-8 weeks]. Other methods include a smear microscopy and molecular methods such as Gene Xpert.
+
+TB data sources often come from prevalence surveys, surveys measuring latent TB infection, TB case notifications, vital registration data and verbal autopsy data. However, data sources are imperfect and data quality and comparability can affect the measurement of the global burden of TB. 
+
 Tuberculosis (TB) continues to be one of the leading causes of infectious disease mortality globally, posing significant challenges to public health systems. In response, the World Health Organization (WHO) launched the End TB Strategy, aiming to reduce TB mortality by 35% and TB incidence by 20% between 2015 and 2020. While global progress has been documented, there is a limited understanding of how these trends vary by age and region, as well as the role of modifiable risk factors such as smoking, alcohol use, and diabetes. Age-specific evaluations are critical to inform tailored interventions and ensure equitable progress across populations.
 
 In this study, we leverage the Global Burden of Disease 2021 (GBD 2021) Tuberculosis Estimates to examine TB mortality trends from 2015 to 2020 across different age groups and regions. The data set includes mortality counts stratified by location, year, and age, as well as estimates of deaths attributable to smoking, alcohol use, and diabetes.
@@ -95,8 +101,6 @@ mortality_data <- mortality_data %>%
 colSums(is.na(mortality_data))
 ```
 
----
-
 # Question 1. How have mortality rates changed from 2015 to 2020 across different age groups and regions?
 
 ```{r}
@@ -136,7 +140,7 @@ ggplot(mortality_region, aes(x = reorder(location_name, -mean_mortality_change),
 ## If you are analyzing regional disparities, the plot helps identify which regions have been improving (decreasing mortality) versus those that might require attention due to rising mortality rates.
 
 # Create a line plot to visualize trends by age group
-ggplot(mortality_region, aes(x = reorder(location_name, mean_mortality_change), 
+ggplot(mortality_region, aes(x = reorder(location_name, -mean_mortality_change), 
                              y = mean_mortality_change, 
                              color = age_group_name, 
                              group = age_group_name)) +
@@ -158,8 +162,6 @@ ggplot(mortality_region, aes(x = reorder(location_name, mean_mortality_change),
 ## slope of each line indicates direction and strength of change 
   ## if line is sloped upward it indicates that mortality has increased in those locations for that age group over time 
 ```
-
----
 
 # Question 2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality?
 
@@ -209,6 +211,7 @@ ggplot(summary_long, aes(x = age_group_name, y = mortality, fill = risk_factor))
   ) +
   theme_minimal()
 ```
+
 ```{r}
 summarize_by_region <- risk_factors %>%
   filter(location_type %in% c("superregion", "region")) %>%  # Filter for superregion and region
@@ -242,8 +245,6 @@ ggplot(region_long, aes(x = location_name, y = mortality, fill = risk_factor)) +
     legend.position = "bottom"
   )
 ```
-
----
 
 # Question 3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?
 
@@ -283,11 +284,35 @@ ggplot(mortality_data, aes(x = reduction_rate, y = avg_risk_factor_contribution)
   theme_minimal()
 ```
 
----
-
 ## Results 
 
-- Ye & Sophie 
+In our first question we calculated and visualized percent changes in TB mortality across regions and age groups. Our results show that there are differences in reductions and increases in TB mortality by region and age group. In **Figure 1.** we calculated the mean mortality change from 2015 - 2020 by all ages and grouped by region and super region. The results of this figure show the visualization of region based on decreasing in mortality. Therefore Eastern Europe, Central Europe and Central Asia have seen the biggest reduction in mortality from 2015 to 2020. There are likely the areas where health interventions, improvements in healthcare or other factors have led to a reduction in deaths due to TB. On the other hand regions such as High-income North America, Oceania and Central Latin America have shown the highest increase in mortality. This suggests that these areas are where mortality rates have risk which could be due to potential challenges such as poor healthcare access, economic difficulty and other systemic issues. This graph helps identify what regions need additional focus in terms of health interventions or resources to help reduce TB mortality. 
+
+**Figure 2.** shows the trends in mean mortality change by region and super region but this time it is grouped by age groups. This figure highlights that consistently we see an increase of mortality change by the age groups in the 70+ and 50-69 year age group. Because these age groups consistently exhibit higher mortality change across multiple locations it indicates that there is need for age-specific interventions for older populations in all regions. 
+
+Our second question wanted to provide insight into the relative contributions of different risk factors (smoking, alcohol and diabetes) to mortality both by age group as well as by region. In **Figure 3.** the bar plot shows how attributable mortality for each risk factor varies across different age groups. As we can see from the graph in ages 15 - 49 the risk factor for diabetes is the highest with smoking slightly higher than alcohol mortality. In the age group of 50 - 69 alcohol is now the highest with diabetes second and smoking third. In 70+ age group, alcohol remains the highest with smoking second and diabetes third. Finally, in all ages alcohol is the highest with diabetes in second and smoking mortality third. 
+
+Therefore in ages 15-49 with diabetes being the highest contribute there could be a need for early screening and prevention programs for diabetes and promoting lifestyle modifications among younger populations. For ages 50-69 with alcohol being the leading risk factor in this age group interventions could include strengthening alcohol education and harm reduction initiatives as well as enhancing access to treatment for alcohol dependency. For ages 70+ alcohol remains the highest contributor which suggests long-term impact of alcohol use or age related vulnerabilities but smoking is the second highest so interventions could include the need for lifelong smoking cessation programs and addressing comorbidities related to alcohol and smoking in older adults. 
+
+**Figure 4** shows the attributable mortality risk by region to see which regions have the highest morbidity due to different risk factors. From this figure we can see that regions with highest risk factor attributable deaths are Sub-Saharan Africa, South Asia and Eastern Sub-Saharan Africa. These likely reflect broader challenges such as limited access to healthcare and preventative services, socioeconomic inequalities that exacerbate exposure to risk factors and insufficient infrastructure for managing chronic diseases and addiction. In order to reduce these risk factors, public health policy and intervention priorities should be placed on these regions.
+
+Finally our last question wanted to see if regions or ages groups with higher mortality reductions also showed lower risk factor contributions? We calculated the mortality reduction rate and then ran a linear regression model to provide insights about the relationship between mortality reduction and average risk factor contribution. The slope B1 was at -25.88 which indicates a very slight and non-significant decrease in average risk factor contribution for each 1% increase in mortality reduction rate. The p-value for the slop was 0.82 which indicates that there is no statistically significant relationship between mortality reduction and risk factor contribution. In addition the R^2 value was at 5.629 X 10^-5 which indicates that the reduction rate explains virtually none of the variation in the average risk factor contribution. The residuals also range quite widely to show that the data points are spread out and the model does not capture much variation. 
+
+In **Figure 5.** we visualized the results of our linear regression model and you can clearly see that there is no correlation. Because there is no significant relationship it is most likely that mortality reductions may be driven by other factors such as improvements in healthcare systems or better access to treatments rather than direct reductions in risk factor contributions. This highlights the need for broader exploration of mortality determinants beyond the examined risk factors. 
+
+# Conclusion 
+
+This project aimed to assess the trends in tuberculosis mortality from 2015 - 2020 and examine the contribution of smoking, alcohol use and diabetes as risk factors. Our analysis revealed several important findings 
+
+1. TB Mortality Trends 
+2. Risk Factor Contribution
+3. Association between Mortality Reduction and Risk Factor Contribution
+
+These findings show the importance of addressing both the disease itself and modifiable risk factors contributing to TB mortality. Targeted interventions based on the findings from this report could potentially further accelerate progress toward the WHO End TB Strategy's mortality reduction goals. Aditionally region and age specific approaches tailored to local health challenges are crucial to achieve sustained reductions in TB mortality globally. 
+
+
+
+
 
 
 
