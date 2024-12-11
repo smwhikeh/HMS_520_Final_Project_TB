@@ -5,8 +5,8 @@ date: "2024-12-06"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 
 # install libraries
 library(readxl)
@@ -78,10 +78,10 @@ We also conducted the following analyses
   - Assess relationship between reduction in mortality rate and average risk factor contribution using linear regression model
   - Visualize the association with scatter plot and regression line 
   
-```{r, include = FALSE}
+```{r, include = TRUE}
 
 # read in the data 
-mortality_data <- read_excel("/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/data/IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D19.XLSX")
+mortality_data <- read_excel("data/IHME_GBD_2021_TB_MORTALITY_RISK_Y2024M03D19.XLSX")
 
 ## filter for relevant columns 
 mortality_data <- mortality_data %>%
@@ -121,50 +121,32 @@ mortality_region <- region_data %>%
 
 ## highlighting the largest reduction
 
-fig_1 <- ggplot(mortality_region, aes(x = reorder(location_name, -mean_mortality_change), y = mean_mortality_change)) + 
-  geom_point(color = "red", size = 3) + 
-  geom_segment(aes(xend = location_name, yend = 0), color = "black") +  # Lines from points to zero
-  coord_flip() +  # Flip axes for horizontal bars
-  labs(title = "Fig 1. Mean Mortality Change from 2015 - 2020 (All Ages)",
-       x = "Region",
-       y = "Mean Mortality Change") + 
-  theme_minimal() + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+fig_1 <- ggplot(mortality_region, 
+                aes(x = reorder(location_name, -mean_mortality_change), 
+                    y = mean_mortality_change, 
+                    color = age_group_name)) +  # Map color to age_group
+  # Add points with variable colors
+  geom_point(size = 3) +
+  # Add lines from points to zero
+  geom_segment(aes(x = location_name, xend = location_name, y = 0, yend = mean_mortality_change), 
+               color = "black") +
+  # Flip axes for horizontal bars
+  coord_flip() +
+  # Add labels and title
+  labs(
+    title = "Fig 1. Mean Mortality Change from 2015 - 2020 (All Ages)",
+    x = "Region",
+    y = "Mean Mortality Change",
+    color = "Age Group"  # Add legend title for color
+  ) +
+  # Minimal theme
+  theme_minimal() +
+  # Adjust axis text for readability
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 fig_1
-
-## Regions with the largest negative values (located at the top of the plot) have seen the biggest reduction in mortality during the 2015-2020 period. These are likely areas where health interventions, improvements in healthcare, or other factors might have led to a reduction in deaths.
-
-## Regions with positive values will show increased mortality, suggesting areas where the mortality rate has risen, potentially due to challenges like poor healthcare access, economic difficulties, or other systemic issues.
-
-## plot provides a comparative view of how different regions have performed in terms of mortality over the 2015-2020 period. This could help identify patterns, trends, or regions that need additional focus in terms of health interventions or resources.
-
-## If you are analyzing regional disparities, the plot helps identify which regions have been improving (decreasing mortality) versus those that might require attention due to rising mortality rates.
-
-# Create a line plot to visualize trends by age group
-fig_2 <- ggplot(mortality_region, aes(x = reorder(location_name, -mean_mortality_change), 
-                             y = mean_mortality_change, 
-                             color = age_group_name, 
-                             group = age_group_name)) +
-  geom_line() +  # Adds lines for each age group
-  geom_point() +  # Adds points at each location for clarity
-  coord_flip() +  # Flip coordinates for horizontal lines
-  labs(title = "Fig 2. Trends in Mean Mortality Change by Location",
-       x = "Location",
-       y = "Mean Mortality Change") +
-  theme_minimal() +  # Clean minimal theme
-  theme(axis.text.y = element_text(size = 10)) +  # Adjust text size for readability
-  scale_color_brewer(palette = "Set2")  # Use a color palette for age groups
-
-fig_2
-
-## represents average change in mortality rates for each location
-  ## positive value indicates increase in mortality while negative value indicates decrease
-
-## lines and points corresponding to each age group show how mean mortality change trend varies for that specific group across different locations
-
-## slope of each line indicates direction and strength of change 
-  ## if line is sloped upward it indicates that mortality has increased in those locations for that age group over time 
 ```
 
 # Question 2. What is the relative contribution of different risk factors [ex - smoking, alcohol, and diabetes] to mortality?
@@ -205,17 +187,17 @@ summary_long <- summary_by_age %>%
     values_to = "mortality"
   )
 
-fig_3 <- ggplot(summary_long, aes(x = age_group_name, y = mortality, fill = risk_factor)) +
+fig_2 <- ggplot(summary_long, aes(x = age_group_name, y = mortality, fill = risk_factor)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(
-    title = "Fig 3. Attributable Mortality by Age Group",
+    title = "Fig 2. Attributable Mortality by Age Group",
     x = "Age Group",
     y = "Attributable Deaths",
     fill = "Risk Factor"
   ) +
   theme_minimal()
 
-fig_3
+fig_2
 ```
 
 ```{r}
@@ -237,10 +219,10 @@ region_long <- summarize_by_region %>%
     values_to = "mortality"
   )
 
-fig_4 <- ggplot(region_long, aes(x = location_name, y = mortality, fill = risk_factor)) +
+fig_3 <- ggplot(region_long, aes(x = location_name, y = mortality, fill = risk_factor)) +
   geom_bar(stat = "identity", position = "dodge") +  # Grouped bars
   labs(
-    title = "Fig 4. Attributable Mortality by Region",
+    title = "Fig 3. Attributable Mortality by Region",
     x = "Region",
     y = "Mortality",
     fill = "Risk Factor"
@@ -251,7 +233,7 @@ fig_4 <- ggplot(region_long, aes(x = location_name, y = mortality, fill = risk_f
     legend.position = "bottom"
   )
 
-fig_4
+fig_3
 ```
 
 # Question 3. Do regions or age groups with higher mortality reductions also show lower risk factor contributions?
@@ -270,7 +252,7 @@ mortality_data <- mortality_data %>%
 mortality_data <- mortality_data %>%
   rowwise() %>%
   mutate(
-    avg_risk_factor_contribution = mean(c(rmv_mean_smoking, rmv_mean_alcohol, rmv_mean_diabetes, rmv_mean_all_risk), na.rm = TRUE)
+    avg_risk_factor_contribution = mean(c(rmv_mean_smoking, rmv_mean_alcohol, rmv_mean_diabetes), na.rm = TRUE)
   )
 
 # linear regression 
@@ -281,34 +263,34 @@ model <- lm(avg_risk_factor_contribution ~ reduction_rate, data = mortality_data
 summary(model)
 
 # visualize 
-fig_5 <- ggplot(mortality_data, aes(x = reduction_rate, y = avg_risk_factor_contribution)) +
+fig_4 <- ggplot(mortality_data, aes(x = reduction_rate, y = avg_risk_factor_contribution)) +
   geom_point() +
   geom_smooth(method = "lm", se = TRUE, color = "blue") +
   labs(
-    title = "Fig 5. Linear Regression: Mortality Reduction vs. Risk Factor Contributions",
+    title = "Fig 4. Linear Regression: Mortality Reduction vs. Risk Factor Contributions",
     x = "Mortality Reduction Rate (%)",
     y = "Average Risk Factor Contribution"
   ) +
   theme_minimal()
 
-fig_5
+fig_4
 ```
 
 ## Results 
 
-In our first question we calculated and visualized percent changes in TB mortality across regions and age groups. Our results show that there are differences in reductions and increases in TB mortality by region and age group. In **Figure 1.** we calculated the mean mortality change from 2015 - 2020 by all ages and grouped by region and super region. The results of this figure show the visualization of region based on decreasing in mortality. Therefore Eastern Europe, Central Europe and Central Asia have seen the biggest reduction in mortality from 2015 to 2020. There are likely the areas where health interventions, improvements in healthcare or other factors have led to a reduction in deaths due to TB. On the other hand regions such as High-income North America, Oceania and Central Latin America have shown the highest increase in mortality. This suggests that these areas are where mortality rates have increased could be due to potential challenges such as poor healthcare access, economic difficulty and other systemic issues. This graph helps identify what regions need additional focus in terms of health interventions or resources to help reduce TB mortality. 
+In our first question we calculated and visualized percent changes in TB mortality across regions and age groups. Our results show that there are differences in reductions and increases in TB mortality by region and age group. In **Figure 1.** we calculated the mean mortality change from 2015 - 2020 by all ages and grouped by region and super region. The results of this figure show the visualization of region based on decreasing in mortality. Therefore Eastern Europe, Central Europe and Central Asia have seen the biggest reduction in mortality from 2015 to 2020. There are likely the areas where health interventions, improvements in healthcare or other factors have led to a reduction in deaths due to TB. On the other hand regions such as High-income North America, Oceania and Central Latin America have shown the highest increase in mortality. This suggests that these areas are where mortality rates have increased could be due to potential challenges such as poor healthcare access, economic difficulty and other systemic issues. This graph helps identify what regions need additional focus in terms of health interventions or resources to help reduce TB mortality.
 
-**Figure 2.** shows the trends in mean mortality change by region and super region but this time it is grouped by age groups. This figure highlights that consistently we see an increase of mortality change by the age groups in the 70+ and 50-69 year age group. Because these age groups consistently exhibit higher mortality change across multiple locations it indicates that there is need for age-specific interventions for older populations in all regions. 
+This figure also highlights that consistently we see an increase of mortality change by the age groups in the 70+ and 50-69 year age group. Because these age groups consistently exhibit higher mortality change across multiple locations it indicates that there is need for age-specific interventions for older populations in all regions. 
 
-Our second question wanted to provide insight into the relative contributions of different risk factors (smoking, alcohol and diabetes) to mortality both by age group as well as by region. In **Figure 3.** the bar plot shows how attributable mortality for each risk factor varies across different age groups. As we can see from the graph in ages 15 - 49 the risk factor for diabetes is the highest with smoking slightly higher than alcohol mortality. In the age group of 50 - 69 alcohol is now the highest with diabetes second and smoking third. In 70+ age group, alcohol remains the highest with smoking second and diabetes third. Finally, in all ages alcohol is the highest with diabetes in second and smoking mortality third. 
+Our second question wanted to provide insight into the relative contributions of different risk factors (smoking, alcohol and diabetes) to mortality both by age group as well as by region. In **Figure 2.** the bar plot shows how attributable mortality for each risk factor varies across different age groups. As we can see from the graph in ages 15 - 49 the risk factor for diabetes is the highest with smoking slightly higher than alcohol mortality. In the age group of 50 - 69 alcohol is now the highest with diabetes second and smoking third. In 70+ age group, alcohol remains the highest with smoking second and diabetes third. Finally, in all ages alcohol is the highest with diabetes in second and smoking mortality third. 
 
 Therefore in ages 15-49 with diabetes being the highest contribute there could be a need for early screening and prevention programs for diabetes and promoting lifestyle modifications among younger populations. For ages 50-69 with alcohol being the leading risk factor in this age group interventions could include strengthening alcohol education and harm reduction initiatives as well as enhancing access to treatment for alcohol dependency. For ages 70+ alcohol remains the highest contributor which suggests long-term impact of alcohol use or age related vulnerabilities but smoking is the second highest so interventions could include the need for lifelong smoking cessation programs and addressing comorbidities related to alcohol and smoking in older adults. 
 
-**Figure 4** shows the attributable mortality risk by region to see which regions have the highest morbidity due to different risk factors. From this figure we can see that regions with highest risk factor attributable deaths are Sub-Saharan Africa, South Asia and Eastern Sub-Saharan Africa. These likely reflect broader challenges such as limited access to healthcare and preventative services, socioeconomic inequalities that exacerbate exposure to risk factors and insufficient infrastructure for managing chronic diseases and addiction. In order to reduce these risk factors, public health policy and intervention priorities should be placed on these regions.
+**Figure 3** shows the attributable mortality risk by region to see which regions have the highest morbidity due to different risk factors. From this figure we can see that regions with highest risk factor attributable deaths are Sub-Saharan Africa, South Asia and Eastern Sub-Saharan Africa. These likely reflect broader challenges such as limited access to healthcare and preventative services, socioeconomic inequalities that exacerbate exposure to risk factors and insufficient infrastructure for managing chronic diseases and addiction. In order to reduce these risk factors, public health policy and intervention priorities should be placed on these regions.
 
 Finally our last question wanted to see if regions or ages groups with higher mortality reductions also showed lower risk factor contributions? We calculated the mortality reduction rate and then ran a linear regression model to provide insights about the relationship between mortality reduction and average risk factor contribution. The slope B1 was at -25.88 which indicates a very slight and non-significant decrease in average risk factor contribution for each 1% increase in mortality reduction rate. The p-value for the slop was 0.82 which indicates that there is no statistically significant relationship between mortality reduction and risk factor contribution. In addition the R^2 value was at 5.629 X 10^-5 which indicates that the reduction rate explains virtually none of the variation in the average risk factor contribution. The residuals also range quite widely to show that the data points are spread out and the model does not capture much variation. 
 
-In **Figure 5.** we visualized the results of our linear regression model and you can clearly see that there is no correlation. Because there is no significant relationship it is most likely that mortality reductions may be driven by other factors such as improvements in healthcare systems or better access to treatments rather than direct reductions in risk factor contributions. This highlights the need for broader exploration of mortality determinants beyond the examined risk factors. 
+In **Figure 4.** we visualized the results of our linear regression model and you can clearly see that there is no correlation. Because there is no significant relationship it is most likely that mortality reductions may be driven by other factors such as improvements in healthcare systems or better access to treatments rather than direct reductions in risk factor contributions. This highlights the need for broader exploration of mortality determinants beyond the examined risk factors. 
 
 # Conclusion 
 
@@ -320,34 +302,29 @@ This project aimed to assess the trends in tuberculosis mortality from 2015 - 20
 
 These findings show the importance of addressing both the disease itself and modifiable risk factors contributing to TB mortality. Targeted interventions based on the findings from this report could potentially further accelerate progress toward the WHO End TB Strategy's mortality reduction goals. Additionally region and age specific approaches tailored to local health challenges are crucial to achieve sustained reductions in TB mortality globally. 
 
-```{r, include = FALSE}
+```{r, include = TRUE}
 
 # save figures 
 
 # Save the plot
 ggsave(
-  filename = "/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/figures/fig_1.jpg",
+  filename = "figures/fig_1.jpg",
   plot = fig_1
 )
 
 ggsave(
-  filename = "/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/figures/fig_2.jpg",
+  filename = "figures/fig_2.jpg",
   plot = fig_2
 )
 
 ggsave(
-  filename = "/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/figures/fig_3.jpg",
+  filename = "figures/fig_3.jpg",
   plot = fig_3
 )
 
 ggsave(
-  filename = "/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/figures/fig_4.jpg",
+  filename = "figures/fig_4.jpg",
   plot = fig_4
-)
-
-ggsave(
-  filename = "/Users/seanwilcox/Desktop/HMS_520_Final_Project_TB/figures/fig_5.jpg",
-  plot = fig_5
 )
 ```
 
